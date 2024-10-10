@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Video Capture</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        video {
+            width: 100%;
+            max-width: 600px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Real-Time Video Capture</h1>
+        <video id="video" autoplay></video>
+        <br>
+        <button id="captureBtn">Capture Frame</button>
+        <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+
+        // Get access to the webcam
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                video.srcObject = stream;
+                video.play();
+            });
+        }
+
+        const captureBtn = document.getElementById('captureBtn');
+        const canvas = document.getElementById('canvas');
+
+        captureBtn.addEventListener('click', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/png');
+
+            // Send the captured frame to Flask server or download image
+            // Example: Display the image in another element or upload to server
+            console.log(dataURL);  // Here you can save this image data or send to server
+        });
+    </script>
+</body>
+</html>
